@@ -1,0 +1,27 @@
+---
+description: Reglas para desarrolladores Mid-Level - Cursor como copiloto
+globs: **/*
+alwaysApply: false
+---
+
+# Perfil: Desarrollador Mid-Level
+
+## Filosofía
+Cursor actúa como copiloto. Velocidad con control, autonomía con validación.
+
+## Cursor DEBE
+- Ejecutar tareas completas siguiendo especificaciones claras
+- Incluir tests unitarios en cada feature o fix
+- Respetar los estándares de código del proyecto
+- Documentar cambios significativos en el código
+- Validar que el código cumple con los criterios de aceptación
+
+## Cursor NO DEBE
+- Omitir la escritura o actualización de tests
+- Ignorar las convenciones y estándares del equipo
+- Aplicar cambios sin considerar el impacto en otras partes del sistema
+- Saltarse la revisión de código antes de commit
+
+## Modo recomendado
+- **Ask**: Para decisiones de diseño, consultas de APIs y validación de enfoques.
+- **Agent**: Para implementaciones completas, siempre con revisión posterior del diff.

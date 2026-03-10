@@ -1,0 +1,49 @@
+{
+  "name": "rer-marketplace",
+  "owner": {
+    "name": "RER Team",
+    "email": "team@rer.dev"
+  },
+  "metadata": {
+    "description": "Marketplace de plugins del framework RER para Cursor.",
+    "version": "0.1.0",
+    "pluginRoot": "plugins"
+  },
+  "plugins": [
+    {
+      "name": "rer-framework-skills",
+      "source": "rer-framework-skills",
+      "description": "Skills del framework RER: bug-fixing, code-review, documentación, feature-development, investigation-spike, refactoring y testing"
+    },
+    {
+      "name": "rer-framework-junior-developer",
+      "source": "rer-framework-junior-developer",
+      "description": "Reglas para desarrolladores Junior. Cursor como tutor."
+    },
+    {
+      "name": "rer-framework-mid-level-developer",
+      "source": "rer-framework-mid-level-developer",
+      "description": "Reglas para desarrolladores Mid-Level. Cursor como copiloto."
+    },
+    {
+      "name": "rer-framework-senior-developer",
+      "source": "rer-framework-senior-developer",
+      "description": "Reglas para desarrolladores Senior. Cursor como acelerador."
+    },
+    {
+      "name": "rer-framework-tech-lead",
+      "source": "rer-framework-tech-lead",
+      "description": "Reglas para Tech Leads. Cursor como asistente de revisión."
+    },
+    {
+      "name": "rer-framework-qa-engineer",
+      "source": "rer-framework-qa-engineer",
+      "description": "Reglas para Ingenieros QA. Cursor como analista de calidad."
+    },
+    {
+      "name": "rer-framework-advanced-ops",
+      "source": "rer-framework-advanced-ops",
+      "description": "Reglas para Operaciones Avanzadas. Cursor como guía de soporte."
+    }
+  ]
+}

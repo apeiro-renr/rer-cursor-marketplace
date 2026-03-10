@@ -1,0 +1,12 @@
+{
+  "name": "rer-framework-qa-engineer",
+  "displayName": "QA Engineer",
+  "version": "0.1.0",
+  "description": "Reglas para Ingenieros QA. Cursor actúa como analista de calidad con foco en edge cases.",
+  "author": {
+    "name": "RER Team",
+    "email": "team@rer.dev"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "rules", "qa", "testing", "quality"]
+}

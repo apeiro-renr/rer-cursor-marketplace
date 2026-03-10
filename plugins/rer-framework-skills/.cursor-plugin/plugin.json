@@ -1,0 +1,12 @@
+{
+  "name": "rer-framework-skills",
+  "displayName": "RER Framework Skills",
+  "version": "0.1.0",
+  "description": "Colección de skills del framework RER para desarrollo profesional: bug-fixing, code-review, documentación, feature-development, investigation-spike, refactoring y testing.",
+  "author": {
+    "name": "RER Team",
+    "email": "team@rer.dev"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "skills", "framework", "rer", "development", "testing", "refactoring", "code-review"]
+}

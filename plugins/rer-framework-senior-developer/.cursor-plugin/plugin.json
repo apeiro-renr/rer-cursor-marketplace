@@ -1,0 +1,12 @@
+{
+  "name": "rer-framework-senior-developer",
+  "displayName": "Senior Developer",
+  "version": "0.1.0",
+  "description": "Reglas para desarrolladores Senior. Cursor actúa como acelerador con máxima productividad.",
+  "author": {
+    "name": "RER Team",
+    "email": "team@rer.dev"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "rules", "senior", "accelerator"]
+}

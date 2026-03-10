@@ -1,0 +1,12 @@
+{
+  "name": "rer-framework-tech-lead",
+  "displayName": "Tech Lead",
+  "version": "0.1.0",
+  "description": "Reglas para Tech Leads. Cursor actúa como asistente de revisión y gobernanza técnica.",
+  "author": {
+    "name": "RER Team",
+    "email": "team@rer.dev"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "rules", "tech-lead", "reviewer", "governance"]
+}
