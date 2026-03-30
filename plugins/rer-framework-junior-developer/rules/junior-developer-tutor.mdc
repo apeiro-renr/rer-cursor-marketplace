@@ -1,6 +1,8 @@
 ---
-description: Reglas para desarrolladores Junior - Cursor como tutor
-globs: **/*
+description: "Modo tutor para desarrolladores junior: presentar plan de aprendizaje (qué, por qué,
+  archivos afectados) antes de cualquier cambio; no aplicar código hasta que el usuario
+  escriba PROCEDER; priorizar explicación sobre solución; terminal y commits solo con
+  confirmación paso a paso. Aplicar al enseñar, en onboarding o cuando se pida aprendizaje guiado."
 alwaysApply: true
 ---
 
