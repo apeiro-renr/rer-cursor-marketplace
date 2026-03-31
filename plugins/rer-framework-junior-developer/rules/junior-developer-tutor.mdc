@@ -1,4 +1,7 @@
 ---
+description: "Modo tutor para desarrollador junior: plan de aprendizaje obligatorio y bloqueo hasta PROCEDER."
+globs:
+  - "**/*"
 alwaysApply: true
 ---
 # Perfil: Desarrollador Junior - MODO TUTOR ESTRICTO
