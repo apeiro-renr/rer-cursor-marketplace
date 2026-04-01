@@ -1,10 +1,9 @@
 ---
 name: ai-config-existing
 description: >-
-  Escanea un proyecto existente y genera ficheros de configuración para agentes IA
-  (AGENTS.md, CLAUDE.md, GEMINI.md, copilot-instructions.md, .cursor/rules/).
-  Usar cuando el proyecto ya tiene código y se quiere configurar o actualizar
-  la guía para herramientas de IA.
+  Escanea un proyecto existente y genera AGENTS.md, CLAUDE.md (stub mínimo
+  apuntando a AGENTS si ambos existen), GEMINI.md y
+  .cursor/rules/. Usar para configurar o actualizar la guía IA en código real.
 ---
 
 # Skill: AI Config — Proyecto existente
@@ -69,6 +68,22 @@ Buscar: `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`
 
 ## FASE 2 — Presentar hallazgos y preguntar
 
+### 2.0 AskQuestion no disponible (fallback obligatorio)
+
+En Cursor, `AskQuestion` **no está en todos los modelos o modos**. Si al invocarla falla o no existe la herramienta, **no detener el flujo**. Orden de preferencia:
+
+1. **Cuestionario en navegador** (§2.2c): formulario local con salida lista para pegar en el chat.
+2. **Cuestionario por chat** (§2.2b): texto en el propio chat.
+
+**Página del wizard** (mismo repo):
+
+- Con servidor init-work en marcha (`:7890`): abrir `http://localhost:7890/ai-config-wizard.html#existing` (el agente puede ejecutar `xdg-open` / `google-chrome` con esa URL, o indicarla al usuario).
+- Sin servidor: abrir `.cursor/skills/init-work/tool/public/ai-config-wizard.html` (pestaña «Proyecto existente») con doble clic o `xdg-open` / ruta absoluta.
+
+El usuario pulsa «Generar salida», copia el **JSON** (recomendado) o la línea compacta, y la pega en el chat; el agente interpreta esos valores y continúa en FASE 3.
+
+**Valores por defecto** si el usuario no responde a las preguntas o escribe `defecto` / `defaults`: herramientas `all`, idioma `es`, si hay ficheros previos `merge`, sin reglas extra.
+
 ### 2.1 Mostrar resumen al usuario
 
 Mostrar el `ProjectProfile` detectado como tabla markdown legible. Ejemplo:
@@ -88,7 +103,7 @@ Mostrar el `ProjectProfile` detectado como tabla markdown legible. Ejemplo:
 | Estructura       | composables/ → interfaces/ → ...   |
 ```
 
-### 2.2 Preguntar con AskQuestion
+### 2.2a Con herramienta AskQuestion (si está disponible)
 
 **Pregunta 1** — Herramientas IA destino (multi-select):
 
@@ -121,6 +136,28 @@ options:
 
 Si el usuario no aporta nada, continuar sin reglas adicionales.
 
+### 2.2b Sin AskQuestion — mismo contenido por chat
+
+Tras la tabla del `ProjectProfile`, publicar en el chat (markdown claro):
+
+1. Lista numerada de opciones equivalentes a las preguntas 1–3 y a 2.3 (si aplica), con los **mismos `id`** que arriba para que el agente pueda parsear la respuesta.
+2. **Formato de respuesta sugerido** (una sola línea o bloque):
+
+```
+herramientas: all | idioma: es | existentes: merge | extra: ninguna
+```
+
+- `herramientas`: ids separados por coma (`agents,claude,...`) o `all`.
+- `idioma`: `es` o `en`.
+- `existentes`: solo si en 2.3 aplica: `replace`, `merge`, `backup`, o `n/a`.
+- `extra`: texto libre o `ninguna`.
+
+3. Recordar que puede responder **`defecto`** para aplicar los valores por defecto de 2.0.
+
+### 2.2c Cuestionario en navegador (sin AskQuestion)
+
+Equivalente a 2.2a/2.2b pero en UI: `.cursor/skills/init-work/tool/public/ai-config-wizard.html` → hash `#existing`. Los campos deben mapear a los mismos `id` (`herramientas`, `idioma`, `existentes`, `extra`). El JSON generado incluye `"flow": "ai-config-existing"` para que el agente distinga el origen.
+
 ### 2.3 Si existen ficheros IA previos
 
 Preguntar:
@@ -146,16 +183,29 @@ Para cada fichero seleccionado, seguir el formato y límites de la plataforma. C
 3. **Solo convenciones no-obvias**: incluir lo que la IA no puede inferir sola del código
 4. **Imperativo y conciso**: frases cortas tipo comando, no párrafos explicativos
 5. **Estructura real del proyecto**: usar paths reales detectados, no genéricos
+6. **Una sola fuente de verdad**: si se generan `AGENTS.md` y `CLAUDE.md`, **no** repetir en `CLAUDE.md` tablas, comandos, convenciones ni flujos que ya estén en `AGENTS.md` (véase §CLAUDE.md optimizado)
 
 ### Límites por plataforma
 
 | Fichero | Límite | Formato |
 |---------|--------|---------|
 | `AGENTS.md` | <100 líneas (ideal <60) | Markdown con headings |
-| `CLAUDE.md` | <200 líneas (ideal <80) | Markdown con headings |
-| `GEMINI.md` | <100 líneas | Markdown, soporta `@imports` |
+| `CLAUDE.md` | **Modo optimizado (recomendado si existe `AGENTS.md`): <20 líneas** — puntero; sin duplicar contenido. Si el usuario pide solo `CLAUDE.md` sin `AGENTS.md`: <80 líneas | Markdown con headings |
+| `GEMINI.md` | <100 líneas; preferir `@./AGENTS.md` si aplica | Markdown, soporta `@imports` |
 | `copilot-instructions.md` | <1000 líneas (primeros 4000 chars = los más importantes) | Markdown |
 | `.cursor/rules/*.mdc` | <500 líneas cada uno | YAML frontmatter + Markdown |
+
+### CLAUDE.md optimizado (Claude Code)
+
+Cuando **`AGENTS.md` también se genera o ya existe** como guía canónica:
+
+1. Generar `CLAUDE.md` como **stub mínimo**: título del proyecto, línea que declare **`AGENTS.md` como fuente única** de convenciones y comandos, enlace o ruta relativa explícita.
+2. Añadir **solo** punteros breves que no estén en `AGENTS.md` si aplica: `.cursor/rules/`, variable de entorno local de desarrollo, ruta de documentación interna.
+3. **No** incluir: tablas de comandos duplicadas, secciones `## Flujo de trabajo` / `## Verificación` largas, ejemplos de código copiados de `AGENTS.md` — eso **infla el contexto** sin aportar (Claude Code puede leer `AGENTS.md`).
+
+Si el usuario **solo** selecciona `CLAUDE.md` sin `AGENTS.md`, entonces sí ampliar contenido (comandos, estructura, convenciones) dentro del límite <80 líneas, sin duplicar reglas del linter.
+
+Symlink `CLAUDE.md` → `AGENTS.md`: **no recomendado** por defecto (tamaño de contexto, compatibilidad Windows en git); preferir el stub.
 
 ### Secciones obligatorias en AGENTS.md (estándar cross-tool)
 
@@ -178,15 +228,9 @@ Para cada fichero seleccionado, seguir el formato y límites de la plataforma. C
 [Lista explícita de lo que NO hacer]
 ```
 
-### Secciones adicionales en CLAUDE.md
-
-Además de lo de AGENTS.md, incluir:
-- Sección `## Flujo de trabajo` con pasos típicos de desarrollo
-- Sección `## Verificación` con checklist pre-commit
-
 ### Secciones en GEMINI.md
 
-Mismo contenido que AGENTS.md pero con syntax `@imports` si hay ficheros de detalle.
+Preferir contenido conciso en el propio fichero; si existe `AGENTS.md`, usar `## Convenciones detalladas` con `@./AGENTS.md` para no duplicar.
 
 ### Reglas .cursor/rules/
 
@@ -205,13 +249,13 @@ alwaysApply: true|false
 ## FASE 4 — Verificación y resumen
 
 1. Contar líneas de cada fichero generado y verificar que no excede límites
-2. Verificar que no hay reglas duplicadas entre ficheros (AGENTS.md no debe repetir lo de .cursor/rules/)
+2. Verificar que no hay reglas duplicadas: `AGENTS.md` vs `.cursor/rules/`; si hay `AGENTS.md` + `CLAUDE.md`, **`CLAUDE.md` no debe repetir** tablas ni convenciones largas de `AGENTS.md` (solo stub §CLAUDE.md optimizado)
 3. Mostrar al usuario un resumen:
 
 ```
 ✅ Ficheros generados:
   - AGENTS.md (47 líneas) — Codex, Cursor, Copilot, Windsurf
-  - CLAUDE.md (62 líneas) — Claude Code
+  - CLAUDE.md (8 líneas, stub → AGENTS.md) — Claude Code
   - GEMINI.md (38 líneas) — Gemini CLI
   - .github/copilot-instructions.md (55 líneas) — GitHub Copilot
 
