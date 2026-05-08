@@ -1,0 +1,26 @@
+---
+description: Límites de líneas por tipo de fichero — composables, views, components, stores, services, tests.
+alwaysApply: false
+---
+
+# Límites óptimos de líneas por fichero
+
+## Composables (`src/composables/**/use*.ts`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer sub-composables por responsabilidad única
+
+## Views (`src/views/**/*.vue`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer componentes presentacionales
+
+## Components (`src/components/**/*.vue`)
+- Límite: ≤ 80 líneas
+- Si se supera: extraer sub-componentes o delegar lógica al composable
+
+## Stores (`src/stores/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: dividir por dominio o mover lógica a composables
+
+## Services (`src/services/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: extraer helpers o clases auxiliares
