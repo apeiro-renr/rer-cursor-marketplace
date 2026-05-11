@@ -1,0 +1,106 @@
+---
+description: Límites de líneas por tipo de fichero — controllers, handlers, use cases, services, entities, repositories, etc.
+alwaysApply: false
+---
+
+# Límites óptimos de líneas por fichero
+
+## Controllers (`**/infrastructure/entrypoint/controller/**/*.ts`)
+- Límite: ≤ 100 líneas
+- Si se supera: extraer lógica de validación/mapeo a application services o data transformers; dividir en controllers con responsabilidad única por endpoint
+
+## Command Handlers (`**/application/command/handler/**/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: delegar lógica compleja a servicios de dominio o aplicación; el handler solo orquesta
+
+## Commands (`**/application/command/**/*.ts` excluyendo `handler/`)
+- Límite: ≤ 30 líneas
+- Si se supera: extraer tipos anidados a interfaces propias; agrupar campos relacionados en value objects
+
+## Query Handlers (`**/application/query/handler/**/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: delegar lógica compleja a servicios de dominio o aplicación; el handler solo orquesta la consulta
+
+## Queries (`**/application/query/**/*.ts` excluyendo `handler/`)
+- Límite: ≤ 30 líneas
+- Si se supera: simplificar parámetros de filtrado; agrupar criterios relacionados en value objects
+
+## Use Cases / Application Services (`**/application/service/**/*.ts`, `**/application/usecase/**/*.ts`)
+- Límite: ≤ 100 líneas
+- Si se supera: descomponer en servicios más pequeños por responsabilidad; extraer lógica de dominio a servicios de dominio
+
+## Event Handlers (`**/application/event/handler/**/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: delegar lógica de procesamiento a application services; el handler solo recibe el evento y orquesta
+
+## Data Transformers (`**/application/datatransformer/**/*.ts`)
+- Límite: ≤ 100 líneas
+- Si se supera: extraer sub-transformaciones a transformers especializados; dividir en funciones privadas por sección lógica
+
+## DTOs de Aplicación (`**/application/dto/**/*.ts`)
+- Límite: ≤ 40 líneas
+- Si se supera: agrupar campos relacionados en sub-DTOs; verificar que no se mezclan responsabilidades
+
+## Entities (`**/domain/entity/**/*.ts`)
+- Límite: ≤ 200 líneas
+- Si se supera: extraer comportamiento complejo a servicios de dominio; considerar dividir en sub-entidades o value objects compuestos
+
+## Aggregates (`**/domain/aggregate/**/*.ts`)
+- Límite: ≤ 250 líneas
+- Si se supera: extraer lógica de invariantes a servicios de dominio; dividir sub-entidades en sus propias clases
+
+## Value Objects (`**/domain/vo/**/*.ts`, `**/domain/valueobject/**/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: dividir en sub-value objects; verificar que no se acumula lógica de transformación que pertenece a otro lugar
+
+## Domain Services (`**/domain/service/**/*.ts`)
+- Límite: ≤ 100 líneas
+- Si se supera: dividir por responsabilidad única; verificar que no se está acumulando lógica de orquestación (mover a application service)
+
+## Domain Repository Interfaces (`**/domain/repository/**/*.ts`)
+- Límite: ≤ 40 líneas
+- Si se supera: segregar por tipo de operación (read/write); verificar que la interfaz no mezcla responsabilidades
+
+## Domain Exceptions (`**/domain/exception/**/*.ts`)
+- Límite: ≤ 25 líneas
+- Si se supera: simplificar; una excepción debería tener un mensaje claro y como mucho un campo adicional de contexto
+
+## Domain Events (`**/domain/event/**/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: verificar si el evento necesita todos los datos; simplificar incluyendo solo lo necesario
+
+## Domain DTOs (`**/domain/dto/**/*.ts`)
+- Límite: ≤ 30 líneas
+- Si se supera: son transportes de datos simples; si crecen, extraer sub-tipos o replantear si necesitan ser value objects
+
+## View Models (`**/domain/viewmodel/**/*.ts`)
+- Límite: ≤ 80 líneas
+- Si se supera: componer con sub-tipos por sección lógica del view model
+
+## Infrastructure Repositories (`**/infrastructure/repository/**/*.ts`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer queries complejas a métodos privados; considerar dividir read/write en repositorios separados
+
+## Mapper implementations (`**/infrastructure/mapper/**/*.ts`)
+- Límite: ≤ 120 líneas
+- Si se supera: extraer métodos de mapeo parcial; delegar sub-mapeos a mappers especializados
+
+## Infrastructure Services (`**/infrastructure/service/**/*.ts`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer helpers o clases auxiliares; dividir por responsabilidad (separar lectura de procesamiento)
+
+## Consumers / Listeners (`**/infrastructure/consumer/**/*.ts`, `**/infrastructure/listener/**/*.ts`)
+- Límite: ≤ 100 líneas
+- Si se supera: extraer lógica de procesamiento a application services; el consumer solo recibe, deserializa y delega
+
+## Tests Unitarios (`**/*.spec.ts`, `**/*.test.ts` en `tests/unit/` o `__tests__/`)
+- Límite: ≤ 200 líneas
+- Si se supera: dividir en múltiples ficheros de test por método/escenario; extraer setup común a helpers o fixtures
+
+## Tests de Integración (`tests/integration/**/*.spec.ts`, `tests/integration/**/*.test.ts`)
+- Límite: ≤ 200 líneas
+- Si se supera: dividir por funcionalidad testada; extraer fixtures complejos a ficheros dedicados
+
+## Tests E2E (`tests/e2e/**/*.spec.ts`, `tests/e2e/**/*.test.ts`)
+- Límite: ≤ 150 líneas
+- Si se supera: dividir por flujo funcional; agrupar escenarios relacionados en ficheros separados

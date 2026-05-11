@@ -1,0 +1,82 @@
+---
+description: Límites de líneas por tipo de fichero — controllers, handlers, services, entities, repositories, etc.
+alwaysApply: false
+---
+
+# Límites óptimos de líneas por fichero
+
+## Controllers REST (`**/infrastructure/entrypoint/controller/*.java`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer lógica de validación/mapeo a application services; dividir endpoints en controllers separados
+
+## Command / Query Handlers (`**/application/command/handler/*.java`, `**/application/query/handler/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: delegar lógica compleja a servicios de dominio o aplicación; el handler solo orquesta
+
+## Commands / Queries (records) (`**/application/command/*.java`, `**/application/query/*.java`)
+- Límite: ≤ 50 líneas
+- Si se supera: extraer DTOs anidados a clases propias; agrupar campos relacionados en value objects
+
+## Application Services (`**/application/service/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: descomponer en servicios más pequeños por responsabilidad; extraer lógica de dominio a servicios de dominio
+
+## Domain Services (`**/domain/service/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: dividir por responsabilidad única; verificar que no se está acumulando lógica de orquestación (mover a application service)
+
+## Value Objects (`**/domain/vo/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: un value object muy grande se puede dividir en sub value objects (al igual que las entidades)
+
+## Data Transformers (`**/application/datatransformer/*.java`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer helpers de transformación por sub-estructura; dividir transform/reverseTransform en métodos privados cohesivos
+
+## Entities (`**/domain/entity/*.java`)
+- Límite: ≤ 200 líneas
+- Si se supera: si el código que gestiona las modificaciones de la entidad se hace muy largo, se puede extraer a servicios de dominio
+
+## View Models (records) (`**/domain/viewmodel/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: componer con sub-records por sección lógica del view model
+
+## Mapper implementations (`**/infrastructure/mapper/*.java`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer métodos de mapeo parcial; delegar sub-mapeos a mappers especializados
+
+## Consumers (`**/infrastructure/consumer/*.java`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer lógica de procesamiento a application services; el consumer solo recibe, deserializa y delega
+
+## Infrastructure Services (`**/infrastructure/service/*.java`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer helpers o clases auxiliares; dividir por responsabilidad (ej., separar constantes de lógica)
+
+## Infrastructure Repositories (`**/infrastructure/repository/*.java`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer queries complejas a métodos privados; considerar dividir read/write en repositorios separados
+
+## Domain Repository interfaces (`**/domain/repository/*.java`)
+- Límite: ≤ 50 líneas
+- Si se supera: verificar que la interfaz no mezcla responsabilidades; considerar segregar por tipo de operación (read/write)
+
+## Domain Exceptions (`**/domain/exception/*.java`)
+- Límite: ≤ 30 líneas
+- Si se supera: simplificar; una excepción debería tener un mensaje claro y como mucho un campo adicional de contexto
+
+## Domain Events (`**/domain/event/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: verificar si el evento necesita todos los datos, se puede simplificar metiendo solo lo necesario inicialmente
+
+## Aggregates (`**/domain/aggregate/*.java`)
+- Límite: ≤ 250 líneas
+- Si se supera: extraer lógica de invariantes a servicios de dominio; dividir sub-entidades en sus propias clases
+
+## DTOs / Request-Response (`**/infrastructure/entrypoint/dto/*.java`)
+- Límite: ≤ 50 líneas
+- Si se supera: extraer sub-records anidados a clases propias; agrupar campos relacionados en objetos separados
+
+## Event Handlers / Listeners (`**/application/event/handler/*.java`, `**/infrastructure/listener/*.java`)
+- Límite: ≤ 100 líneas
+- Si se supera: delegar lógica de procesamiento a application services; el handler solo recibe el evento y orquesta

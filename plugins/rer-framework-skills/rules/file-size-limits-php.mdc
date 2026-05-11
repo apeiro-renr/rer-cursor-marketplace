@@ -1,0 +1,106 @@
+---
+description: Límites de líneas por tipo de fichero — controllers, handlers, services, entities, etc.
+alwaysApply: false
+---
+
+# Límites óptimos de líneas por fichero
+
+## Controllers API (`**/Infrastructure/Entrypoint/Controller/Api/**/*.php`)
+- Límite: ≤ 80 líneas
+- Si se supera: extraer lógica de validación/mapeo al handler o a un data transformer; dividir en controllers con responsabilidad única por endpoint
+
+## Controllers Web (`**/Infrastructure/Entrypoint/Controller/Web/**/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: extraer transformaciones de datos a data transformers; delegar lógica al handler correspondiente
+
+## Console Commands (`**/Infrastructure/Entrypoint/Console/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: extraer lógica de procesamiento a handlers/servicios de aplicación; el command solo recibe input, delega y reporta
+
+## Command Handlers (`**/Application/Command/Handler/**/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: delegar lógica compleja a servicios de dominio; el handler solo orquesta la secuencia del caso de uso
+
+## Commands (`**/Application/Command/**/*.php` excluyendo `Handler/`)
+- Límite: ≤ 30 líneas
+- Si se supera: un command con demasiados parámetros sugiere que se puede descomponer el caso de uso o agrupar campos en value objects
+
+## Query Handlers (`**/Application/Query/Handler/**/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: delegar lógica compleja a servicios de dominio o aplicación; el handler solo orquesta la consulta
+
+## Queries (`**/Application/Query/**/*.php` excluyendo `Handler/`)
+- Límite: ≤ 30 líneas
+- Si se supera: simplificar parámetros de filtrado; agrupar criterios relacionados en value objects
+
+## Event Handlers (`**/Application/Event/Handler/**/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: delegar lógica de procesamiento a application services; el handler solo recibe el evento y orquesta
+
+## Data Transformers (`**/Application/DataTransformer/**/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: extraer sub-transformaciones a transformers especializados; dividir en métodos privados por sección lógica
+
+## DTOs de Aplicación (`**/Application/Dto/*.php`)
+- Límite: ≤ 40 líneas
+- Si se supera: agrupar campos relacionados en sub-DTOs; verificar que no se mezclan responsabilidades
+
+## Entities (`**/Domain/Entity/**/*.php`)
+- Límite: ≤ 200 líneas
+- Si se supera: extraer comportamiento complejo a servicios de dominio; considerar dividir en sub-entidades o value objects compuestos
+
+## Domain Value Objects (`**/Domain/ValueObject/*.php`)
+- Límite: ≤ 80 líneas
+- Si se supera: dividir en sub-value objects; verificar que no se acumula lógica de transformación que pertenece a otro lugar
+
+## Domain Services (`**/Domain/Service/**/*.php`)
+- Límite: ≤ 100 líneas
+- Si se supera: dividir por responsabilidad única; extraer lógica algorítmica pesada a clases especializadas (ej. generadores, calculadores)
+
+## Domain Repository Interfaces (`**/Domain/Repository/**/*.php`)
+- Límite: ≤ 50 líneas
+- Si se supera: segregar por tipo de operación (read/write); verificar que la interfaz no mezcla responsabilidades de distintos contextos
+
+## Domain Exceptions (`**/Domain/Exception/*.php`)
+- Límite: ≤ 25 líneas
+- Si se supera: simplificar; una excepción debería tener un mensaje descriptivo y como mucho un campo adicional de contexto
+
+## Domain DTOs (`**/Domain/Dto/*.php`)
+- Límite: ≤ 30 líneas
+- Si se supera: son transportes de datos simples; si crecen, extraer sub-DTOs o replantear si necesitan ser value objects
+
+## Domain Events (`**/Domain/Event/*.php`)
+- Límite: ≤ 80 líneas
+- Si se supera: verificar si el evento necesita todos los datos; simplificar incluyendo solo lo necesario inicialmente
+
+## Infrastructure Repositories (`**/Infrastructure/Repository/**/Mysql*.php`)
+- Límite: ≤ 130 líneas
+- Si se supera: extraer queries complejas a métodos privados; considerar dividir read/write si la interfaz lo permite
+
+## Doctrine Custom Types (`**/Infrastructure/Repository/**/CustomType/*.php`)
+- Límite: ≤ 60 líneas
+- Si se supera: simplificar la lógica de conversión; si el tipo es muy complejo, puede que el value object necesite reestructurarse
+
+## Infrastructure Services (`**/Infrastructure/Service/**/*.php`)
+- Límite: ≤ 150 líneas
+- Si se supera: extraer helpers de parsing/transformación a clases auxiliares; dividir por responsabilidad (separar lectura de procesamiento)
+
+## Infrastructure Subscribers (`**/Infrastructure/Subscriber/*.php`)
+- Límite: ≤ 80 líneas
+- Si se supera: mover la lógica pesada a servicios de aplicación; el subscriber solo intercepta, extrae datos y delega
+
+## Tests Unitarios (`tests/Unit/**/*Test.php`)
+- Límite: ≤ 200 líneas
+- Si se supera: dividir en múltiples clases de test por método/escenario; extraer setup común a traits o helpers
+
+## Tests de Integración (`tests/Integration/**/*Test.php`)
+- Límite: ≤ 200 líneas
+- Si se supera: dividir por funcionalidad testada; extraer fixtures complejos a DataFixtures dedicados
+
+## Tests Funcionales (`tests/Functional/**/*Cest.php`)
+- Límite: ≤ 150 líneas
+- Si se supera: dividir por flujo funcional; agrupar escenarios relacionados en Cest separados
+
+## Object Mothers (`tests/Mother/**/*.php`)
+- Límite: ≤ 120 líneas
+- Si se supera: verificar que no se duplica lógica de construcción; reutilizar Mothers de Value Objects en lugar de instanciar directamente
