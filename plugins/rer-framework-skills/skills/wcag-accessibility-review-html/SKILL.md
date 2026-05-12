@@ -93,9 +93,54 @@ Always explain *why* something is flagged, not just *what* is wrong.
 - Reduce animations to a minimum
 - Always consider: what happens if the user disables animations in system settings?
   - Respect `prefers-reduced-motion` media query in CSS
-- Never use autoplay for sliders or carousels
-  - If autoplay is required: provide pause/play control
-  - Always show slide position indicator: "Slide 1 of 4"
+
+## Carousels
+
+### Semantic structure
+- Container: `role="region"` + `aria-roledescription="carousel"` + `aria-label` or `aria-labelledby` with a descriptive name (e.g. `aria-label="Noticias destacadas"`). Without this name some screen readers ignore the landmark.
+- Each slide: `role="group"` + `aria-roledescription="slide"` + an accessible name via `aria-label` (e.g. `aria-label="3 de 6"`) or `aria-labelledby`.
+- The `aria-roledescription` values must be localized to the page language.
+
+### Visibility and behavior
+- Content not visible on screen must also be unreachable by keyboard and screen reader.
+
+**Mobile (single visible slide)**
+- Slides advance one at a time.
+- Non-visible slides must have the `inert` attribute (+ `aria-hidden="true"` as fallback for older browsers/screen readers).
+
+**Desktop (multiple visible slides)**
+- Slides advance in groups (e.g. 3 at a time).
+- All currently visible slides are active; the rest have `inert` (+ `aria-hidden="true"` as fallback).
+- If advancement is one-by-one (e.g. from showing 1-2-3 to 2-3-4), the slide leaving the viewport must become `inert` immediately and the slide entering must lose `inert`.
+
+### Live region announcements
+- The slide container should have `aria-live`:
+  - `aria-live="off"` while the carousel is auto-rotating (prevents constant interruptions).
+  - `aria-live="polite"` when rotation is stopped (announces new slides on user navigation).
+- Additionally, use a `.sr-only` (or equivalent) element to provide human-readable position updates:
+  - Mobile: "Mostrando noticia 2 de 10 en total"
+  - Desktop: "Mostrando noticias 4 a 6 de 10 en total"
+
+### Navigation buttons (Previous / Next)
+- Must have explicit `aria-label` since they usually contain only icons:
+  - `aria-label="Diapositiva anterior"`
+  - `aria-label="Diapositiva siguiente"`
+- Should include `aria-controls` referencing the `id` of the slide container.
+- Non-circular carousel: disable with `disabled` (or `aria-disabled="true"` with manual focus management) at the first/last slide.
+- Circular carousel: never disable the buttons.
+- If dot indicators are used for navigation, their tap/click area must be at least 24×24px.
+
+### Autoplay (if applicable)
+- Include a visible and focusable pause/play button. It must be the first element in the Tab order inside the carousel so users find it before the rotating content.
+- The button's accessible name must reflect current state: "Detener presentación automática" / "Iniciar presentación automática".
+- Auto-advancement must stop when the carousel receives focus or hover. It does not restart unless the user explicitly activates the play control.
+- If the user has `prefers-reduced-motion` enabled, autoplay must not start on page load.
+
+### Focus management
+- **Buttons:** after pressing "Next", focus remains on the button — it must not jump into the slide content automatically. This allows rapid sequential navigation.
+- **Tab forward:** when the user presses Tab from a navigation button, focus enters the first focusable element of the first visible slide.
+- **Shift+Tab backward:** from the first focusable element of the first visible slide, focus must go to the "Previous" button (not leave the carousel).
+- **Exiting the carousel:** after the last focusable element of the last visible slide, the next Tab moves to the "Next" button and then out of the carousel. Focus must never jump to a hidden slide.
 
 ## Forms
 
@@ -140,6 +185,7 @@ Always explain *why* something is flagged, not just *what* is wrong.
 - Use HTML5 landmark elements: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`
 - There must be exactly one `<main>` per page
 - If multiple `<nav>` or `<aside>` elements exist, each must have a unique `aria-label`
+- If a `<section>` element is used, it must contain a heading (`<h1>`–`<h6>`) or be described with `aria-label`
 
 ### Interactive elements
 - An `<a>` (anchor) must never have `type="button"` or `role="button"`
@@ -164,6 +210,7 @@ Always explain *why* something is flagged, not just *what* is wrong.
 - If a word or phrase is in a different language inline, mark it: `<span lang="en">lorem ipsum</span>`
 
 ### Modals & Overlays
+- The trigger element should have `aria-haspopup="dialog"` to inform assistive technologies that a dialog will appear
 - When a modal opens, focus must move inside it
 - When it closes, focus must return to the element that triggered it
 - Modal must trap focus while open (Tab should cycle inside, not escape)
