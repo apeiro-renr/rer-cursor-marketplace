@@ -3,7 +3,7 @@
   "hooks": {
     "beforeSubmitPrompt": [
       {
-        "command": "./check-cursor-admin-manifest.sh"
+        "command": "${CURSOR_PLUGIN_ROOT}/hooks/check-cursor-admin-manifest.sh"
       }
     ]
   }
