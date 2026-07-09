@@ -1,0 +1,13 @@
+{
+  "name": "rer-cursor-admin",
+  "displayName": "RER Cursor Admin",
+  "version": "0.1.0",
+  "description": "Comprueba que cursor-admin esté instalado antes de enviar prompts al agente.",
+  "author": {
+    "name": "RER Team",
+    "email": "team@rer.dev"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "hooks", "cursor-admin", "rer"],
+  "hooks": "hooks/hooks.json"
+}

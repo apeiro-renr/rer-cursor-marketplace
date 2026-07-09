@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "command": "./check-cursor-admin-manifest.sh"
+      }
+    ]
+  }
+}

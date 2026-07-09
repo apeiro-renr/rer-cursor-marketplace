@@ -44,6 +44,11 @@
       "name": "rer-framework-advanced-ops",
       "source": "rer-framework-advanced-ops",
       "description": "Reglas para Operaciones Avanzadas. Cursor como guía de soporte."
+    },
+    {
+      "name": "rer-cursor-admin",
+      "source": "rer-cursor-admin",
+      "description": "Hook beforeSubmitPrompt que verifica la instalación de cursor-admin."
     }
   ]
 }
