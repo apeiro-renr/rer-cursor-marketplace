@@ -4,6 +4,7 @@ Cursor Team Marketplace con los plugins del framework RER.
 
 ## Plugins incluidos
 
+- **rer-tako**: Comando `/tako-install`. Comprueba Jira y GitLab por MCP o por `.env` y, si puede leer el `PROMPT.md` del orquestador, sigue sus instrucciones.
 - **rer-framework-skills**: Colección de 7 skills para desarrollo profesional
   - **bug-fixing**: Diagnóstico y corrección sistemática de bugs
   - **code-review**: Revisión de código y PRs con análisis estructurado

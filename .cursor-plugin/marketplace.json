@@ -49,6 +49,11 @@
       "name": "rer-cursor-admin",
       "source": "rer-cursor-admin",
       "description": "Hook beforeSubmitPrompt que verifica la instalación de cursor-admin."
+    },
+    {
+      "name": "rer-tako",
+      "source": "rer-tako",
+      "description": "Comando /tako-install: comprueba Jira y GitLab y sigue el PROMPT.md del orquestador."
     }
   ]
 }
