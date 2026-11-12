@@ -2,11 +2,11 @@
   "name": "rer-tako",
   "displayName": "RER Tako",
   "version": "0.1.0",
-  "description": "Comando /tako-install: comprueba Jira y GitLab por MCP o por .env y, si puede leer el PROMPT.md del orquestador, sigue sus instrucciones.",
+  "description": "Comandos /tako-install y /tako-update. La instalación sigue el PROMPT.md del orquestador. La actualización llama a PROMPT-ACTUALIZAR.md de main para traer las mejoras de Tako.",
   "author": {
     "name": "RER Team",
     "email": "team@rer.dev"
   },
   "license": "MIT",
-  "keywords": ["cursor", "plugin", "gitlab", "jira", "rer", "tako", "orquestador"]
+  "keywords": ["cursor", "plugin", "gitlab", "jira", "rer", "tako", "orquestador", "tako-update"]
 }

@@ -53,7 +53,7 @@
     {
       "name": "rer-tako",
       "source": "rer-tako",
-      "description": "Comando /tako-install: comprueba Jira y GitLab y sigue el PROMPT.md del orquestador."
+      "description": "Comandos /tako-install y /tako-update. La actualización sigue PROMPT-ACTUALIZAR.md de main en el orquestador."
     }
   ]
 }

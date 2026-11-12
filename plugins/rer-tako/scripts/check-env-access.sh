@@ -3,6 +3,11 @@
 set -euo pipefail
 
 ENV_FILE="${1:-.env}"
+FILE="${2:-PROMPT.md}"
+GITLAB_ONLY=0
+if [[ "${3:-}" == "--gitlab-only" ]]; then
+  GITLAB_ONLY=1
+fi
 
 if [[ ! -f "$ENV_FILE" ]]; then
   printf '%s\n' "ENV_MISSING: no existe ${ENV_FILE}. Ahí deben estar los tokens, sin pegarlos en el chat." >&2
@@ -36,7 +41,6 @@ done < "$ENV_FILE"
 GITLAB_URL="${GITLAB_URL:-https://gitlab.prensaiberica.es}"
 GITLAB_URL="${GITLAB_URL%/}"
 PROJECT="tech%2Futils%2Fai%2Forquestador"
-FILE="PROMPT.md"
 REF="main"
 URL="${GITLAB_URL}/api/v4/projects/${PROJECT}/repository/files/${FILE}/raw?ref=${REF}"
 
@@ -55,10 +59,10 @@ else
     cat "$BODY"
     printf '\n'
   elif [[ -z "$HTTP_CODE" || "$HTTP_CODE" == "000" ]]; then
-    printf '%s\n' "GITLAB_DENIED: no se pudo conectar con ${GITLAB_URL} para leer PROMPT.md." >&2
+    printf '%s\n' "GITLAB_DENIED: no se pudo conectar con ${GITLAB_URL} para leer ${FILE}." >&2
     cat "$BODY" >&2
   else
-    printf '%s\n' "GITLAB_DENIED: GitLab respondió HTTP ${HTTP_CODE} al leer PROMPT.md en ${GITLAB_URL}." >&2
+    printf '%s\n' "GITLAB_DENIED: GitLab respondió HTTP ${HTTP_CODE} al leer ${FILE} en ${GITLAB_URL}." >&2
     cat "$BODY" >&2
     printf '\n' >&2
   fi
@@ -66,6 +70,10 @@ else
   if [[ "$HTTP_CODE" != "200" ]]; then
     fail=1
   fi
+fi
+
+if [[ "$GITLAB_ONLY" == "1" ]]; then
+  exit "$fail"
 fi
 
 JIRA_EMAIL="${JIRA_USER_EMAIL:-${USER_JIRA:-}}"
